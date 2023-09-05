@@ -110,6 +110,9 @@
                         <li class="nav-item">
                             <a class="nav-link active" href="artists" wire:navigate="artists" aria-disabled="true">Artists</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="artists" wire:navigate="albums" aria-disabled="true">Albums</a>
+                        </li>
                     </ul>
                     <div class="d-flex">
                         <li class="nav-item text-white" style="list-style: none; margin-right: 10px">

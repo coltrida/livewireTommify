@@ -39,6 +39,18 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function isAdmin() {
+        return $this->role === 'admin';
+    }
+
+    public function isArtist() {
+        return $this->role === 'artist';
+    }
+
+    public function isUser() {
+        return $this->role === 'user';
+    }
+
     public function scopeUtenti($query)
     {
         return $query->where('role', 'user');
@@ -47,5 +59,10 @@ class User extends Authenticatable
     public function scopeArtist($query)
     {
         return $query->where('role', 'artist');
+    }
+
+    public function albumSales()
+    {
+        return $this->belongsToMany(Album::class, 'album_sales', 'user_id', 'album_id');
     }
 }

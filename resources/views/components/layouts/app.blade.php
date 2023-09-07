@@ -91,6 +91,8 @@
             }
         </style>
 
+        @yield('head')
+
     </head>
     <body>
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -101,38 +103,63 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                        @guest
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/" wire:navigate>Home</a>
+                            <a class="nav-link active" aria-current="page" href="{{route('home')}}" wire:navigate>Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="users" wire:navigate="users">Users</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="artists" wire:navigate="artists" aria-disabled="true">Artists</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="artists" wire:navigate="albums" aria-disabled="true">Albums</a>
-                        </li>
-                    </ul>
-                    <div class="d-flex">
-                        <li class="nav-item text-white" style="list-style: none; margin-right: 10px">
-                            <a href="{{'login'}}" class="nav-link" aria-disabled="true">Login</a>
-                        </li>
-                        <li class="nav-item text-white" style="list-style: none">
-                            <a href="{{'register'}}" class="nav-link" aria-disabled="true">Register</a>
-                        </li>
-                    </div>
+                        @endguest
 
+                        @auth
+                            @if(auth()->user()->isAdmin())
+                                @include('components.layouts.menuAdmin')
+                            @endif
+                            @if(auth()->user()->isArtist())
+                                @include('components.layouts.menuArtist')
+                            @endif
+                            @if(auth()->user()->isUser())
+                                @include('components.layouts.menuUser')
+                            @endif
+                        @endauth
+                    </ul>
+                    @auth
+                        <li class="nav-item dropdown" style="transform: translateY(-10px)">
+                            <a class="nav-link dropdown-toggle text-white"
+                               data-bs-toggle="dropdown"
+                               href="#" role="button"
+                               aria-expanded="false">
+                                {{auth()->user()->name}}
+                            </a>
+                            <ul class="dropdown-menu" style="transform: translateX(-90px)">
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                <li ><a class="dropdown-item" href="{{route('logout')}}"
+                                       onclick="event.preventDefault();
+                                                this.closest('form').submit();"
+                                    >Logout</a></li>
+                                </form>
+                            </ul>
+                        </li>
+                    @else
+                        <div class="d-flex">
+                            <li class="nav-item text-white" style="list-style: none; margin-right: 10px">
+                                <a href="{{'login'}}" class="nav-link" aria-disabled="true">Login</a>
+                            </li>
+                            <li class="nav-item text-white" style="list-style: none">
+                                <a href="{{'register'}}" class="nav-link" aria-disabled="true">Register</a>
+                            </li>
+                        </div>
+                    @endauth
                 </div>
             </div>
         </nav>
 
         <main class="container">
-            <div class="bg-body-tertiary p-5 rounded">
+            <div class="bg-body-tertiary p-5 mt-3 rounded">
                 {{ $slot }}
             </div>
         </main>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+        @yield('foot')
     </body>
 </html>

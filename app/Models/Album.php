@@ -20,4 +20,9 @@ class Album extends Model
         return $this->hasMany(Song::class);
     }
 
+    public function userSales()
+    {
+        return $this->belongsToMany(User::class, 'album_sales', 'album_id', 'user_id');
+    }
+
 }

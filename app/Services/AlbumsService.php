@@ -13,4 +13,11 @@ class AlbumsService
             $a->with('user');
         }])->latest()->paginate(5);
     }
+
+    public function listaCinqueAlbumPiuVenduti()
+    {
+        return Album::withCount('userSales')->with('userSales')->limit(5)->get()->sortByDesc(function ($album){
+            return $album->userSales()->count();
+        });
+    }
 }
